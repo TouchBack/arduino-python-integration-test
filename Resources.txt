@@ -1,0 +1,5 @@
+http://petrimaki.wordpress.com/2013/04/28/reading-arduino-serial-ports-in-windows-7/
+
+http://stackoverflow.com/questions/165495/detecting-mouse-clicks-in-windows-using-python
+
+http://pyhook.sourceforge.net/doc_1.5.0/
