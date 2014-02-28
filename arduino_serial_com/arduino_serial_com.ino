@@ -3,45 +3,52 @@ int motorPin = 9;
 int redPin = 6;
 int greenPin = 5;
 int bluePin = 3;
-String floryan_string = "";
+int count = 0;
+int counter = 0;
+char floryan_string[32];
 boolean started = false;
 boolean ended = false;
 int red = 0;
 int green = 0;
 int blue = 0;
 int motor = 0;
+int i = 0;
+char red_str[] = "000";
+char blue_str[] = "000";
+char green_str[] = "000";
+char motor_str[] = "000";
+int j = 0;
 
-void parse_floryan(String floryan)
+int availableMemory() {
+  int size = 2048; // Use 2048 with ATmega328
+  byte *buf;
+
+  while ((buf = (byte *) malloc(--size)) == NULL)
+    ;
+
+  free(buf);
+
+  return size;
+}
+
+void parse_floryan(char floryan[])
 {
-  Serial.println(floryan);
-  int i = 0;
-  for(i = 0; i < floryan.length(); i ++)
+  i = 0;
+  
+  for(i = 0; i < count; i ++)
   {
-    if (floryan.charAt(i) == 'r')
+    if (floryan[i] == 'r')
     {
-      String red_str = "";
-      int j = i+2;
-      for (j; j < floryan.length(); j++)
+      j = i+2;
+      counter = 3;
+      
+      int k;
+      for(k = 0; k < 3; k++)
       {
-        if (j == ',')
-        {
-          break;
-        }
-        else
-        {
-          red_str += floryan.charAt(j);
-        }
+        red_str[k] = '0';
       }
-      char red_c[red_str.length()];
-      red_str.toCharArray(red_c, red_str.length());
-      red = atoi(red_c);
-    }
-    
-    if (floryan.charAt(i) == 'g')
-    {
-      String green_str = "";
-      int j = i+2;
-      for (j; j < floryan.length(); j++)
+      
+      for (j; j < count; j++)
       {
         if (j == ',')
         {
@@ -49,20 +56,39 @@ void parse_floryan(String floryan)
         }
         else
         {
-          green_str += floryan.charAt(j);
+          red_str[counter-1] = floryan[j] ;
+          counter--;
         }
       }
       
-      char green_c[green_str.length()];
-      green_str.toCharArray(green_c, green_str.length());
-      green = atoi(green_c);
+      if (counter == 1)
+      {
+        char tmp = red_str[2];
+        red_str[2] = red_str[1];
+        red_str[1] = tmp;
+      }
+      else if (counter == 0)
+      {
+        char tmp = red_str[2];
+        red_str[2] = red_str[0];
+        red_str[0] = tmp;
+      }
+      
+      red = atoi(red_str);
     }
     
-    if (floryan.charAt(i) == 'b')
+    if (floryan[i] == 'g')
     {
-      String blue_str = "";
-      int j = i+2;
-      for (j; j < floryan.length(); j++)
+      j = i+2;
+      counter = 3;
+      
+      int k;
+      for(k = 0; k < 3; k++)
+      {
+        green_str[k] = '0';
+      }
+      
+      for (j; j < count; j++)
       {
         if (j == ',')
         {
@@ -70,20 +96,79 @@ void parse_floryan(String floryan)
         }
         else
         {
-          blue_str += floryan.charAt(j);
+          green_str[counter-1] = floryan[j] ;
+          counter--;
         }
       }
       
-      char blue_c[blue_str.length()];
-      blue_str.toCharArray(blue_c, blue_str.length());
-      blue = atoi(blue_c);
+      if (counter == 1)
+      {
+        char tmp = green_str[2];
+        green_str[2] = green_str[1];
+        green_str[1] = tmp;
+      }
+      else if (counter == 0)
+      {
+        char tmp = green_str[2];
+        green_str[2] = green_str[0];
+        green_str[0] = tmp;
+      }
+      
+      green = atoi(green_str);
     }
     
-    if (floryan.charAt(i) == 'm')
+    if (floryan[i] == 'b')
     {
-      String motor_str = "";
-      int j = i+2;
-      for (j; j < floryan.length(); j++)
+      j = i+2;
+      counter = 3;
+      
+      int k;
+      for(k = 0; k < 3; k++)
+      {
+        blue_str[k] = '0';
+      }
+      
+      for (j; j < count; j++)
+      {
+        if (j == ',' || j == '}')
+        {
+          break;
+        }
+        else
+        {
+          blue_str[counter-1] = floryan[j] ;
+          counter--;
+        }
+      }
+      
+      if (counter == 1)
+      {
+        char tmp = blue_str[2];
+        blue_str[2] = blue_str[1];
+        blue_str[1] = tmp;
+      }
+      else if (counter == 0)
+      {
+        char tmp = blue_str[2];
+        blue_str[2] = blue_str[0];
+        blue_str[0] = tmp;
+      }
+      
+      blue = atoi(blue_str);
+    }
+    
+    if (floryan[i] == 'm')
+    {
+      j = i+2;
+      counter = 3;
+      
+      int k;
+      for(k = 0; k < 3; k++)
+      {
+        motor_str[k] = '0';
+      }
+      
+      for (j; j < count; j++)
       {
         if (j == ',')
         {
@@ -91,15 +176,30 @@ void parse_floryan(String floryan)
         }
         else
         {
-          motor_str += floryan.charAt(j);
+          motor_str[counter-1] = floryan[j];
+          counter--;
         }
       }
       
-      char motor_c[motor_str.length()];
-      motor_str.toCharArray(motor_c, motor_str.length());
-      motor = atoi(motor_c);
+      if (counter == 1)
+      {
+        char tmp = motor_str[2];
+        motor_str[2] = motor_str[1];
+        motor_str[1] = tmp;
+      }
+      else if (counter == 0)
+      {
+        char tmp = motor_str[2];
+        motor_str[2] = motor_str[0];
+        motor_str[0] = tmp;
+      }
+      
+      
+      motor = atoi(motor_str);
     }   
   }
+  
+  count = 0;
 }
 
 void send_signals(int red, int green, int blue, int motor)
@@ -130,6 +230,7 @@ void setup(){
  
 void loop(){
   // if there is something to read
+//  Serial.println(availableMemory());
   if (Serial.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial.read();
@@ -138,25 +239,32 @@ void loop(){
     if (incomingByte == '{')
     {
       started = true;
-      floryan_string = "{";
+      count = 0;
     }   
     //if {, then end reading FLORYAN
     else if (incomingByte == '}')
     {
       ended = true;
-      floryan_string += "}";
+      floryan_string[count] = '}';
+      count +=1;
     }
     //if we have started reading, but not ended, append byte to string
     if (started && !ended)
     {
-      floryan_string += incomingByte;
+      floryan_string[count] = incomingByte;
+      count += 1;
     }
     //if started and ended, then parse the string
-    else if (started && ended)
+    else if (started && ended || count == 32)
     {
       started = false;
       ended = false;
-      
+      int a = 0;
+      for(a; a < count; a++)
+      {
+         Serial.print(floryan_string[a]); 
+      }
+      Serial.println();
       parse_floryan(floryan_string);
       send_signals(red, green, blue, motor);
     }
