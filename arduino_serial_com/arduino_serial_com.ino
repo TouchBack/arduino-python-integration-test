@@ -269,7 +269,7 @@ void loop(){
 //      int a = 0;
 //      for(a; a < count; a++)
 //      {
-////         Serial.print(floryan_string[a]); 
+//         Serial.print(floryan_string[a]); 
 //      }
 //      Serial.println();
       parse_floryan(floryan_string);
