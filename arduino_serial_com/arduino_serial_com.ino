@@ -40,7 +40,7 @@ void parse_floryan(char floryan[])
     if (floryan[i] == 'r')
     {
       j = i+2;
-      counter = 3;
+      counter = 0;
       
       int k;
       for(k = 0; k < 3; k++)
@@ -50,37 +50,38 @@ void parse_floryan(char floryan[])
       
       for (j; j < count; j++)
       {
-        if (j == ',')
+        if (j == ',' || j == '}')
         {
           break;
         }
         else
         {
-          red_str[counter-1] = floryan[j] ;
-          counter--;
+          red_str[counter] = floryan[j] ;
+          counter++;
         }
       }
       
       if (counter == 1)
       {
-        char tmp = red_str[2];
-        red_str[2] = red_str[1];
-        red_str[1] = tmp;
-      }
-      else if (counter == 0)
+        char tmp = red_str[0];
+        red_str[0] = '0';
+        red_str[2] = tmp;
+      }      
+      else if (counter == 2)
       {
-        char tmp = red_str[2];
-        red_str[2] = red_str[0];
-        red_str[0] = tmp;
-      }
-      
+        char tmp1 = red_str[0];
+        char tmp2 = red_str[1];
+        red_str[0] = '0';
+        red_str[1] = tmp1;
+        red_str[2] = tmp2;
+      }      
       red = atoi(red_str);
     }
     
     if (floryan[i] == 'g')
     {
       j = i+2;
-      counter = 3;
+      counter = 0;
       
       int k;
       for(k = 0; k < 3; k++)
@@ -90,29 +91,31 @@ void parse_floryan(char floryan[])
       
       for (j; j < count; j++)
       {
-        if (j == ',')
+        if (j == ',' || j == '}')
         {
           break;
         }
         else
         {
-          green_str[counter-1] = floryan[j] ;
-          counter--;
+          green_str[counter] = floryan[j] ;
+          counter++;
         }
       }
       
       if (counter == 1)
       {
-        char tmp = green_str[2];
-        green_str[2] = green_str[1];
-        green_str[1] = tmp;
-      }
-      else if (counter == 0)
+        char tmp = green_str[0];
+        green_str[0] = '0';
+        green_str[2] = tmp;
+      }      
+      else if (counter == 2)
       {
-        char tmp = green_str[2];
-        green_str[2] = green_str[0];
-        green_str[0] = tmp;
-      }
+        char tmp1 = green_str[0];
+        char tmp2 = green_str[1];
+        green_str[0] = '0';
+        green_str[1] = tmp1;
+        green_str[2] = tmp2;
+      }      
       
       green = atoi(green_str);
     }
@@ -120,7 +123,7 @@ void parse_floryan(char floryan[])
     if (floryan[i] == 'b')
     {
       j = i+2;
-      counter = 3;
+      counter = 0;
       
       int k;
       for(k = 0; k < 3; k++)
@@ -136,31 +139,33 @@ void parse_floryan(char floryan[])
         }
         else
         {
-          blue_str[counter-1] = floryan[j] ;
-          counter--;
+          blue_str[counter] = floryan[j] ;
+          counter++;
         }
       }
       
       if (counter == 1)
       {
-        char tmp = blue_str[2];
-        blue_str[2] = blue_str[1];
-        blue_str[1] = tmp;
-      }
-      else if (counter == 0)
+        char tmp = blue_str[0];
+        blue_str[0] = '0';
+        blue_str[2] = tmp;
+      }      
+      else if (counter == 2)
       {
-        char tmp = blue_str[2];
-        blue_str[2] = blue_str[0];
-        blue_str[0] = tmp;
-      }
+        char tmp1 = blue_str[0];
+        char tmp2 = blue_str[1];
+        blue_str[0] = '0';
+        blue_str[1] = tmp1;
+        blue_str[2] = tmp2;
+      }   
       
       blue = atoi(blue_str);
     }
-    
+
     if (floryan[i] == 'm')
     {
       j = i+2;
-      counter = 3;
+      counter = 0;
       
       int k;
       for(k = 0; k < 3; k++)
@@ -170,33 +175,35 @@ void parse_floryan(char floryan[])
       
       for (j; j < count; j++)
       {
-        if (j == ',')
+        if (j == ',' || j == '}')
         {
           break;
         }
         else
         {
-          motor_str[counter-1] = floryan[j];
-          counter--;
+          motor_str[counter] = floryan[j] ;
+          counter++;
         }
       }
       
       if (counter == 1)
       {
-        char tmp = motor_str[2];
-        motor_str[2] = motor_str[1];
-        motor_str[1] = tmp;
-      }
-      else if (counter == 0)
+        char tmp = motor_str[0];
+        motor_str[0] = '0';
+        motor_str[2] = tmp;
+      }      
+      else if (counter == 2)
       {
-        char tmp = motor_str[2];
-        motor_str[2] = motor_str[0];
-        motor_str[0] = tmp;
-      }
-      
-      
+        char tmp1 = motor_str[0];
+        char tmp2 = motor_str[1];
+        motor_str[0] = '0';
+        motor_str[1] = tmp1;
+        motor_str[2] = tmp2;
+      }      
       motor = atoi(motor_str);
-    }   
+    }
+    
+       
   }
   
   count = 0;
@@ -213,10 +220,10 @@ void send_signals(int red, int green, int blue, int motor)
   analogWrite(greenPin, green);
   analogWrite(bluePin, blue);
   analogWrite(motorPin, motor);
-  Serial.println(red);  
-  Serial.println(green);  
-  Serial.println(blue);  
-  Serial.println(motor);  
+//  Serial.println(red);  
+//  Serial.println(green);  
+//  Serial.println(blue);  
+//  Serial.println(motor);  
   
 }
  
@@ -259,12 +266,12 @@ void loop(){
     {
       started = false;
       ended = false;
-      int a = 0;
-      for(a; a < count; a++)
-      {
-         Serial.print(floryan_string[a]); 
-      }
-      Serial.println();
+//      int a = 0;
+//      for(a; a < count; a++)
+//      {
+////         Serial.print(floryan_string[a]); 
+//      }
+//      Serial.println();
       parse_floryan(floryan_string);
       send_signals(red, green, blue, motor);
     }
